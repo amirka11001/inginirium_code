@@ -31,7 +31,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.password">
+  <component name="RunManager" selected="Python.Coords">
     <configuration name="Coords" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Lesson17.12.23" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -97,8 +97,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.password" />
         <item itemvalue="Python.Coords" />
+        <item itemvalue="Python.password" />
       </list>
     </recent_temporary>
   </component>
