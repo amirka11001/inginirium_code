@@ -1,118 +1,79 @@
-import pygame
+import numpy as np
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings; warnings.filterwarnings(action= "once")
 
-BLACK=(0,)*3
-GRAY=(100,)*3
-WHITE=(255,)*3
-RED=(255,0,0)
-YELLOW=(255,255,0)
-LIGHTGREEN=(0,200,200)
+large = 22; med = 16; small = 12
+params = {"axes.titlesize": large,
+          "legend.fontsize": med,
+          "figure.figsize": (16, 10),
+          "axes.labelsize": med,
+          "axes.titlesize": med,
+          "xtick.labelsize": med,
+          "ytick.labelsize": med,
+          "figure.titlesize": large}
+plt.rcParams.update(params)
+plt.style.use("fast")
+sns.set_style("white")
+midwest = pd.read_csv("https://raw.githubusercontent.com/selva86/datasets/master/midwest_filter.csv")
 
-CROSS= '#046582'
-CIRCLE= '#e4bad4'
+categories = np.unique(midwest["category"])
+colors = [plt.cm.tab10(i/float(len(categories) -1)) for i in range(len(categories))]
 
-pygame.init()
-W,H=600,600
-screen=pygame.display.set_mode((W,H))
-class Board:
-    def __init__(self,W,H,size):
-        self.W= W
-        self.H=H
-        self.size=size
-        self.board=[
-            [0,0,0],
-            [0, 0, 0],
-            [0, 0, 0]
+plt.figure(figsize=(16, 10), dpi = 80, facecolor="w", edgecolor="k")
 
-        ]
-        self.move = 1
-    def click(self,mouse_pos):
-        x=mouse_pos[0]//self.size
-        y = mouse_pos[1] // self.size
-        self.board[y][x]= self.move
-        self.move = -self.move
-    def render(self,screen):
-        pygame.draw.line(screen,GRAY,(0,200),(self.W,200))
-        pygame.draw.line(screen, GRAY, (0, 400), (self.W, 400))
-        pygame.draw.line(screen, GRAY, (200, 0), (200,self.H))
-        pygame.draw.line(screen, GRAY, (400, 0), (400, self.H))
-        for y in range(3):
-            for x in range(3):
-                if self.board[y][x]==1:
-                    draw_cross(screen,x,y,self.size)
-                elif self.board[y][x]==-1:
-                    draw_circle(screen,x,y,self.size)
-def draw_circle(sc,x,y,size):
-    x=(x+.5)*size
-    y = (y + .5) * size
-    pygame.draw.circle(sc,CIRCLE,(x,y),(size-3)//2,3)
-def draw_cross(sc,x,y,size):
-    x = x * size + 3
-    y = y * size + 3
-    pygame.draw.line(sc, CROSS, (x, y), (x+size - 3,y+size-3), 3)
-    pygame.draw.line(sc, CROSS, (x + size - 3, y - 3),(x,y+size-3),3)
+for i, category in enumerate(categories):
+    plt.scatter("area", "poptotal",
+                data=midwest.loc[midwest.category==category, :],
+                s=20, c=colors[i], label=str(category))
 
-def is_end(board):
-    for i in range(3):
-        if check_i_col(board,i):
-            return 'col',i
-        if check_i_line(board,i):
-            return 'line',i
-    if check_main_diag(board):
-        return 'diag',1
-    if check_secondary_diag(board):
-        return 'diag',2
-    return None
+plt.gca().set(xlim=(0.0, 0,1), ylim=(0, 90000),
+              xlabel="Area", ylabel= "Population")
 
-def check_main_diag(x,i):
-    if x[0][0] == x[1][1] == x[2][2] != 0:
-        return True
-    else:
-        return False
-def check_i_line(x,i):
-    if x[i][0]==x[i][1]==x[i][2] !=0:
-        return True
-    else:
-       return False
-def check_i_col(x,i):
-    if x[0][i]==x[1][i]==x[2][i] !=0:
-        return True
-    else:
-        return False
-def check_secondary_diag (x,i):
-    if x[0][2]==x[1][1]==x[2][2] !=0:
-        return True
-    else:
-        return False
-def check_end(self):
-    is_end_info=is_end(self.board)
-    shift=self.W//10
-    if is_end_info is not None:
-        type_end=is_end_info[0]
-        number=is_end_info[1]
-        if type_end=='col':
-            x0,y0
-        elif type_end=='line':...
-        elif type_end=='diag':...
-        pygame.draw.line(screen,RED,(x0,y0),(x1,y1),10)
-        pygame.display.update()
-        pygame.time.delay(3000)
-        return True
-    else:
-        return False
-board=Board(W,H,200)
-while True:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            pygame.quit()
-            exit()
-        if event.type==pygame.MOUSEBUTTONDOWN:
-            board.click(event.pos)
+plt.xticks(fontsize=12); plt.yticks(fontsize=12)
+plt.title("Scatterplot of Midwest Area vs Population", fontsize=22)
+plt.legend(fontsize=12)
+plt.show()
 
-    screen.fill(WHITE)
-    board.render(screen)
-    pygame.display.update()
 
-    keys=pygame.key.get_pressed()
-    if keys[pygame.K_ESCAPE] or board.check_end():
-        pygame.quit()
-        exit()
+
+from matplotlib import patches
+from scipy.spatial import ConvexHull
+import warnings; warnings.simplefilter("ignore")
+sns.set_style("white")
+
+midwest = pd.read_csv("https://raw.githubusercontent.com/selva86/datasets/master/midwest_filter.csv")
+
+categories = np.unique(midwest["category"])
+colors = [plt.cv.tab10(i/float(len(categories)-1 )) for i in range(len(categories))]
+
+fig = plt.figure(figsize=(16, 10), dpi=80, facecolor="w", edgecolor="k")
+
+for i, category in enumerate(categories):
+    plt.scatter("area", "poptotal", data=midwest.loc[midwest.category==category, :], s="dot_size", c=colors[i], label=str(categecolory), edgecolors="black", linewidths=0.5)
+
+def encircle(x, y, ax=None, **kw):
+    if not ax: ax=plt.gca()
+    p = np.c_[x,y]
+    hull = ConvexHull(p)
+    poly = plt.Polygon(p[hull.vertices,:], **kw)
+    ax.add_patch(poly)
+
+midwest_encircle_data = midwest.loc[midwest.state=="IN", :]
+
+encircle(midwest_encircle_data.area, midwest_encircle_data.poptotal, ec = 'k', fc="gold", alpha=0.1)
+encircle(midwest_encircle_data.area, midwest_encircle_data.poptotal, ec='firebrick', fc="none", linewidth=1.5)
+
+plt.gca().set(xlim=(0.0, 0.1), ylim=(0, 90000),
+              xlabel="Area", ylabel="Population")
+
+
+
+
+plt.xticks(fontsize=12); plt.yticks(fontsize=12)
+plt.title("Bubble plot with Encircling", fontdize=22)
+plt.legend(fontsize=12)
+plt.show()
+
