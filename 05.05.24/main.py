@@ -74,7 +74,7 @@ class Enemy(pygame.sprite.Sprite):
         # Задаем границы
         self.rect = self.image.get_rect()
         self.dir = 'right'
-        self.health = 5
+        self.health = 15
     def update(self):
         if self.rect.right>width:
             self.image = pygame.image.load('враг.png')
@@ -99,11 +99,13 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(*group)
         # Загружаем изображение игрока
         self.image = pygame.image.load('пуля.png')
+
         # Настраиваем размер изображения
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.centery=player.rect.centery
         self.rect.left=player.rect.right
+
         self.to_left = False
         self.to_right = True
     def update(self):
@@ -121,9 +123,10 @@ class Bird(pygame.sprite.Sprite):
         # Вызываем конструктор самого класса Sprite
         super().__init__()
         # Загружаем изображение
-        self.image = pygame.image.load('Птица.png')
+        self.image = pygame.image.load('птичка.png')
         # Задаем размер. Первая 100 - ширина, вторая 100 - высота
         self.image = pygame.transform.scale(self.image, (50, 50))
+
         # Задаем границы
         self.rect = self.image.get_rect()
         self.rect.y = 100
@@ -132,15 +135,20 @@ class Bird(pygame.sprite.Sprite):
 
     def update(self):
         if self.rect.right>width:
-            #self.rect.left-=5
+            self.image = pygame.image.load('птичка2.png')
+            self.image = pygame.transform.scale(self.image, (50, 50))
             self.dir = 'left'
+            self.rect.x = 900
         if self.rect.left<0:
             self.dir = 'right'
+            self.image = pygame.image.load('птичка.png')
+            self.image = pygame.transform.scale(self.image, (50, 50))
             #self.rect.left+=5
         if self.dir == 'right':
-            self.rect.left += 1
+            self.rect.left += 2
         elif self.dir == 'left':
-            self.rect.left -= 1
+            self.rect.left -= 2
+        self.rect.y = 50
 pygame.init()
 
 # Создаем переменные ширины и высоты экрана
@@ -198,6 +206,8 @@ while True:
             if d < 20:
                 if event.key == pygame.K_f:
                     bullet = Bullet()
+                    player.image = pygame.image.load('поза.png')
+                    player.image = pygame.transform.scale(player.image, (200,170 ))
                     if player.to_right:
                         bullet.to_right = True
                         bullet.to_left = False
@@ -210,9 +220,11 @@ while True:
 
                         bullet.image = pygame.image.load('пуля2.png')
                         bullet.image = pygame.transform.scale(bullet.image, (50, 50))
+                        player.image = pygame.image.load('поза2.png')
+                        player.image = pygame.transform.scale(player.image, (210, 170))
                     bullet_sprites.add(bullet)
     d+=1
-    if d == 60:
+    if d == 5:
         d = 1
     # Заливаем окно белым цветом
     win.fill((255, 255, 255))
@@ -253,18 +265,14 @@ while True:
         bullet_sprites.remove(hits[0])
 
     if enemy.health <=0:
-        enemy.health = 5
-        enemy.rect.right = width+140
+        enemy.health=15
+        enemy.rect.left=0
     if player.health <= 0:
-       break
-
-        # Меняем координату X противника на рандомное число
-        #hits[0].rect.left = random.randint(0, width - hits[0].rect.width)
-        # Меняем координату Y противника на рандомное число
-        #hits[0].rect.top = random.randint(0, height - hits[0].rect.height)
-        #hits[0].image = pygame.image.load('1.png')
-
-    # Обновляем окно
+        break        # Обновляем окно
     pygame.display.update()
     # Настраиваем FPS
     clock.tick(FPS)
+
+
+
+
